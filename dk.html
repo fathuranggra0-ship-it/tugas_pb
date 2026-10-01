@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMB Universitas Nusantara</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="dk.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 48 48">
+    <path d="M24 3 2 15h44z" fill="#fca311"/>
+    <path d="M7 19h7v18H7zM20.500 19h7v18h-7zM34 19h7v18h-7z" fill="currentColor"/>
+    <path d="M3 40h42v5H3z" fill="#fca311"/>
+  </symbol>
+</svg>
+
+<!-- LOGIN -->
+<section id="login" class="login">
+  <div class="brand">
+    <svg class="logo big"><use href="#logo"/></svg>
+    <h1>Universitas<br>Nusantara</h1>
+    <p>Daftar kuliah dari mana saja. Lihat peringkat Anda langsung setelah mengirim formulir.</p>
+  </div>
+  <form id="fLogin" class="loginbox">
+    <h2>Masuk dengan nomor HP</h2>
+    <p class="note">Belum punya akun? Akun dibuat otomatis saat Anda masuk pertama kali.</p>
+    <label>Nomor HP<input id="hp" inputmode="tel" placeholder="081234567890" autocomplete="tel"></label>
+    <label id="otpBox" hidden>Kode OTP<input id="otp" inputmode="numeric" maxlength="4" placeholder="4 digit"></label>
+    <button class="btn" id="btnLogin">Kirim kode OTP</button>
+  </form>
+</section>
+
+<!-- APLIKASI -->
+<div id="app" hidden>
+  <header class="top">
+    <div class="id"><svg class="logo"><use href="#logo"/></svg><b>PMB Universitas Nusantara</b></div>
+    <div class="right">
+      <span id="net" class="net">Memeriksa koneksi</span>
+      <span id="who" class="who"></span>
+      <button class="btn ghost sm" id="btnOut">Keluar</button>
+    </div>
+  </header>
+
+  <nav class="steps" id="steps">
+    <span><i>1</i>Biodata</span><span><i>2</i>Pendaftaran</span><span><i>3</i>Peringkat</span><span><i>4</i>Daftar ulang</span>
+  </nav>
+
+  <main>
+    <section id="s1" class="page">
+      <h2>Isi biodata</h2>
+      <form id="fBio" class="grid">
+        <label>Nama lengkap<input name="nama" required></label>
+        <label>NIK<input name="nik" required pattern="\d{16}" maxlength="16" title="16 digit angka"></label>
+        <label>Tempat lahir<input name="tempat" required></label>
+        <label>Tanggal lahir<input type="date" name="tgl" required></label>
+        <label>Jenis kelamin
+          <select name="jk" required><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select>
+        </label>
+        <label>Email<input type="email" name="email" required></label>
+        <label>No. HP<input name="hp" readonly></label>
+        <label>Asal sekolah<input name="sekolah" required></label>
+        <label class="full">Alamat<textarea name="alamat" rows="2" required></textarea></label>
+        <div class="full"><button class="btn">Lanjut ke pendaftaran</button></div>
+      </form>
+    </section>
+
+    <section id="s2" class="page" hidden>
+      <h2>Form pendaftaran kuliah</h2>
+      <form id="fDaftar" class="grid">
+        <label>Fakultas<select id="fak" name="fak" required></select></label>
+        <label>Program studi<select id="prodi" name="prodi" required></select></label>
+        <label>Predikat kelulusan
+          <select name="predikat" required>
+            <option value="">Pilih</option>
+            <option value="Sangat Baik">Sangat Baik (+10)</option>
+            <option value="Baik">Baik (+6)</option>
+            <option value="Cukup">Cukup (+3)</option>
+          </select>
+        </label>
+        <label>Nilai rata-rata rapor (0 sampai 100)<input type="number" name="nilai" min="0" max="100" step="0.01" required></label>
+        <p class="full note">Skor = 90% nilai rapor + bonus predikat. Peringkat dihitung per program studi sesuai kuota.</p>
+        <div class="full row">
+          <button type="button" class="btn ghost" data-go="1">Kembali</button>
+          <button class="btn">Kirim pendaftaran</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="s3" class="page" hidden>
+      <h2>Hasil dan peringkat</h2>
+      <div id="hasil" class="hasil"></div>
+      <div class="row">
+        <button class="btn" id="btnUlang" hidden>Lanjut daftar ulang</button>
+        <button class="btn ghost" id="btnExcel">Unduh Excel</button>
+        <button class="btn ghost" id="btnDemo">Tambah 100 data contoh</button>
+      </div>
+      <div class="tbl"><table id="tabel"></table></div>
+    </section>
+
+    <section id="s4" class="page" hidden>
+      <h2>Daftar ulang</h2>
+      <form id="fUlang" class="grid">
+        <label>Ukuran jaket almamater
+          <select name="jaket" required><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        </label>
+        <label>Metode pembayaran
+          <select name="bayar" required><option>Transfer bank</option><option>Virtual account</option><option>Gerai pembayaran</option></select>
+        </label>
+        <label class="full chk"><input type="checkbox" required> Saya menyatakan data yang diisi benar.</label>
+        <div class="full"><button class="btn">Cetak tiket</button></div>
+      </form>
+      <div id="tiket" class="tiket" hidden></div>
+      <div class="row" id="aksiTiket" hidden>
+        <button class="btn" onclick="window.print()">Cetak atau simpan PDF</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="dk.js"></script>
+</body>
+</html>
